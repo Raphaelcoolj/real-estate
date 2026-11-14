@@ -5,6 +5,10 @@ const nextConfig: NextConfig = {
   // per-request auth (`cookies()`) in layouts/pages works without extra
   // Suspense scaffolding — appropriate for a dynamic, authenticated marketplace.
   serverExternalPackages: ["mongoose"],
+  experimental: {
+    // Admin listing import accepts up to 500 listings (~2 MB) per action.
+    serverActions: { bodySizeLimit: "3mb" },
+  },
   images: {
     // Local SVG artwork (generated demo property imagery) is served through
     // the image optimizer.

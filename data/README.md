@@ -9,6 +9,11 @@ npm run import -- --dry-run     # validate only, writes nothing
 npm run import -- ./data/my-file.json
 ```
 
+Admins can do the same from **Dashboard → Data import** — paste/upload the
+JSON there, or use **Generate sample** to produce synthetic listings for
+testing. The dashboard accepts up to 500 entries and validates exactly like
+the CLI.
+
 Listings are matched by `slug`, so re-running updates the same record instead
 of creating duplicates. New listings enter the moderation queue as `pending`
 unless you set `"status": "approved"`.

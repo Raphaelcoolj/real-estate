@@ -5,8 +5,11 @@
 
 import mongoose from "mongoose";
 
-const MONGODB_URI =
-  process.env.MONGODB_URI ?? "mongodb://127.0.0.1:27017/arcadia";
+/* Read lazily so scripts that call `loadEnvConfig()` after imports still
+ * connect to the configured database rather than the fallback. */
+function mongoUri(): string {
+  return process.env.MONGODB_URI ?? "mongodb://127.0.0.1:27017/arcadia";
+}
 
 interface MongooseCache {
   conn: typeof mongoose | null;
@@ -30,7 +33,7 @@ export async function connectDB(): Promise<typeof mongoose> {
   if (cache.conn) return cache.conn;
 
   if (!cache.promise) {
-    cache.promise = mongoose.connect(MONGODB_URI, {
+    cache.promise = mongoose.connect(mongoUri(), {
       serverSelectionTimeoutMS: 8000,
       maxPoolSize: 10,
       autoIndex: process.env.NODE_ENV !== "production",

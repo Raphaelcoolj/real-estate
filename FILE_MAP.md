@@ -71,6 +71,7 @@ Orientation guide for the Arcadia codebase. Paths are relative to the repository
 | `verification/page.tsx` | Agent verification queue |
 | `reports/page.tsx` | Member report review |
 | `users/page.tsx` | Member directory and account actions |
+| `import/page.tsx` | Admin data import: JSON upload + synthetic listing generator |
 
 ### API — `app/api/`
 
@@ -146,6 +147,7 @@ Reusable primitives: `button.tsx` (`buttonStyles`, `Button`, `ButtonLink`), `inp
 | `moderation-list.tsx` | Approve/reject/feature moderation cards |
 | `report-list.tsx` | Report review dialog |
 | `user-table.tsx` | Member management table |
+| `import-studio.tsx` | Payload editor, file upload, synthetic generator, validation results |
 
 ---
 
@@ -163,6 +165,7 @@ Server Actions, all returning `ActionResult`.
 | `inspection.actions.ts` | Request viewing, confirm/decline/reschedule/complete |
 | `notification.actions.ts` | Mark read, report creation/review |
 | `admin.actions.ts` | Member moderation and role changes |
+| `import.actions.ts` | Admin listing import (validate/upsert, revalidation) |
 
 ---
 
@@ -190,6 +193,8 @@ Server Actions, all returning `ActionResult`.
 | `services/notification.service.ts` | Notification creation and reads |
 | `services/report.service.ts` | Report creation and review |
 | `services/analytics.service.ts` | Admin/agent/customer overview metrics |
+| `listings-import.ts` | Shared import schema, payload parsing and upsert runner (CLI + admin) |
+| `synthetic-listings.ts` | Deterministic sample listing generator used by the admin studio |
 | `validation/index.ts` | `parseInput`, `toFieldErrors`, FormData helpers |
 | `validation/auth.ts` | Auth and profile schemas |
 | `validation/property.ts` | Listing, moderation and search-filter schemas |

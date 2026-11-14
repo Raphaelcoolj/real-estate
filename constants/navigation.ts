@@ -84,6 +84,7 @@ export const DASHBOARD_NAV: Record<Role | "admin", DashboardNavItem[]> = {
     { label: "Users", href: "/dashboard/users" },
     { section: "Platform" },
     { label: "Analytics", href: "/dashboard/analytics" },
+    { label: "Data import", href: "/dashboard/import" },
     { label: "Notifications", href: "/dashboard/notifications" },
     { label: "Settings", href: "/dashboard/settings" },
   ],
