@@ -123,6 +123,19 @@ export const propertyInputSchema = propertyInputBaseSchema.refine(
 
 export type PropertyInput = z.infer<typeof propertyInputSchema>;
 
+/** Admin creation on behalf of an agent: any publish state plus an owner. */
+export const adminListingInputSchema = propertyInputBaseSchema
+  .extend({
+    status: z.enum(["draft", "pending", "approved"]).default("pending"),
+    agentId: z.string().trim().min(1, "Choose the agent who owns this listing"),
+  })
+  .refine((data) => !(data.lat && !data.lng) && !(data.lng && !data.lat), {
+    message: "Provide both latitude and longitude, or neither",
+    path: ["lat"],
+  });
+
+export type AdminListingInput = z.infer<typeof adminListingInputSchema>;
+
 export const moderationSchema = z.object({
   propertyId: z.string().min(1),
   action: z.enum(["approve", "reject", "feature", "unfeature", "archive", "restore"]),

@@ -116,10 +116,15 @@ See [`data/README.md`](data/README.md) for the field reference and a complete
 example. Agents must exist first — create them via `/sign-up` and approve them
 in Dashboard → Verification; imported listings reference `agentEmail`.
 
-Admins can also import from the browser at **Dashboard → Data import**:
-paste or upload the same JSON, or press **Generate sample** to fill the editor
-with 6–96 synthetic listings (optionally sent to the moderation queue), then
-validate or import. The same validation and slug-based upsert apply.
+Admins can also work from the browser at **Dashboard → Data import**:
+
+- **Add listing with form** (`/dashboard/import/new`) — enter genuine
+  inventory through the full listing form, assign it to an active agent, and
+  publish immediately, send it to moderation, or save a draft.
+- **JSON import** — paste or upload the same payload, or press **Generate
+  sample** to fill the editor with 6–96 synthetic listings (optionally sent to
+  the moderation queue), then validate or import. The same validation and
+  slug-based upsert apply.
 
 Do not run `npm run seed` after importing real content — it drops the database.
 
@@ -171,7 +176,8 @@ npm run typecheck && npm run lint && npm test && npm run build
 | `/dashboard/enquiries`, `/inspections`, `/notifications`, `/settings` | all |
 | `/dashboard/listings`, `/listings/new`, `/listings/[id]/edit` | agent, admin |
 | `/dashboard/analytics` | agent, admin |
-| `/dashboard/moderation`, `/verification`, `/reports`, `/users`, `/import` | admin |
+| `/dashboard/moderation`, `/verification`, `/reports`, `/users` | admin |
+| `/dashboard/import`, `/dashboard/import/new` | admin |
 
 **API**
 

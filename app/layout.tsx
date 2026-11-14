@@ -15,7 +15,20 @@ const sans = Manrope({
   variable: "--font-sans-body",
 });
 
-const siteUrl = process.env.APP_URL || process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
+/** Accept bare hosts (e.g. Vercel's `my-app.vercel.app`) as well as full URLs. */
+function resolveSiteUrl(): string {
+  const raw = (process.env.APP_URL || process.env.NEXT_PUBLIC_APP_URL || "").trim();
+  if (!raw) return "http://localhost:3000";
+
+  const candidate = /^[a-z][a-z0-9+.-]*:\/\//i.test(raw) ? raw : `https://${raw}`;
+  try {
+    return new URL(candidate).origin;
+  } catch {
+    return "http://localhost:3000";
+  }
+}
+
+const siteUrl = resolveSiteUrl();
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),

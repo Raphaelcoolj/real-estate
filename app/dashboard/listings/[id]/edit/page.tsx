@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { DashboardHeader } from "@/components/dashboard/page-header";
-import { ListingForm, type ListingFormValues } from "@/components/dashboard/listing-form";
+import { ListingForm } from "@/components/dashboard/listing-form";
+import type { ListingFormValues } from "@/lib/listing-form";
 import { Breadcrumbs } from "@/components/layout/breadcrumbs";
 import { requireRole } from "@/lib/rbac";
 import { getPropertyForEdit } from "@/lib/services/property.service";

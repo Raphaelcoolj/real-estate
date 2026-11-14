@@ -8,6 +8,9 @@ import { cookies } from "next/headers";
 import bcrypt from "bcryptjs";
 import { cache } from "react";
 import { connectDB } from "@/lib/db";
+/* Register the referenced model so `populate("agency")` works on routes that
+ * do not otherwise import it (Next's per-route module graph is not global). */
+import "@/models/Agency";
 import { User } from "@/models/User";
 import {
   SESSION_COOKIE,

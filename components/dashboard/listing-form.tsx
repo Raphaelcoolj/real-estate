@@ -1,6 +1,10 @@
 "use client";
 
-import { createListingAction, updateListingAction } from "@/actions/property.actions";
+import {
+  adminCreateListingAction,
+  createListingAction,
+  updateListingAction,
+} from "@/actions/property.actions";
 import { Button } from "@/components/ui/button";
 import { FieldError, Input, Label, Select, Textarea } from "@/components/ui/input";
 import { useToast } from "@/components/ui/toast";
@@ -14,86 +18,11 @@ import {
   type CurrencyCode,
   type PropertyType,
 } from "@/constants";
+import { emptyListingFormValues, type ListingFormValues } from "@/lib/listing-form";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useRef, useState, useTransition } from "react";
-
-export type ListingFormValues = {
-  title: string;
-  description: string;
-  transactionType: "sale" | "rent";
-  propertyType: PropertyType;
-  price: number;
-  currency: CurrencyCode;
-  pricePeriod: "total" | "per_month";
-  priceOnApplication: boolean;
-  bedrooms: number;
-  bathrooms: number;
-  areaSqm: string;
-  lotSqm: string;
-  yearBuilt: string;
-  floors: string;
-  parking: string;
-  furnishing: string;
-  orientation: string;
-  heating: string;
-  cooling: string;
-  tenure: string;
-  epc: string;
-  addressLine: string;
-  neighbourhood: string;
-  city: string;
-  state: string;
-  postalCode: string;
-  country: string;
-  lat: string;
-  lng: string;
-  highlights: string[];
-  amenities: string[];
-  images: { url: string; publicId?: string | null }[];
-  videoUrl: string;
-  floorPlans: { url: string; label: string }[];
-};
-
-export function emptyListingFormValues(): ListingFormValues {
-  return {
-    title: "",
-    description: "",
-    transactionType: "sale",
-    propertyType: "apartment",
-    price: 0,
-    currency: "USD",
-    pricePeriod: "total",
-    priceOnApplication: false,
-    bedrooms: 0,
-    bathrooms: 0,
-    areaSqm: "",
-    lotSqm: "",
-    yearBuilt: "",
-    floors: "",
-    parking: "",
-    furnishing: "",
-    orientation: "",
-    heating: "",
-    cooling: "",
-    tenure: "",
-    epc: "",
-    addressLine: "",
-    neighbourhood: "",
-    city: "",
-    state: "",
-    postalCode: "",
-    country: "",
-    lat: "",
-    lng: "",
-    highlights: [],
-    amenities: [],
-    images: [],
-    videoUrl: "",
-    floorPlans: [],
-  };
-}
 
 type Errors = Record<string, string[]>;
 
@@ -261,14 +190,23 @@ function ImageUploader({
   );
 }
 
+export type AgentChoice = { id: string; name: string; email: string };
+
+type SaveAs = "pending" | "draft" | "approved";
+
 export function ListingForm({
   mode,
   propertyId,
   initialValues,
+  agents,
+  admin = false,
 }: {
   mode: "create" | "edit";
   propertyId?: string;
   initialValues?: ListingFormValues;
+  /** Admin creation only: choose the active agent who owns the listing. */
+  agents?: AgentChoice[];
+  admin?: boolean;
 }) {
   const router = useRouter();
   const { toast } = useToast();
@@ -281,7 +219,10 @@ export function ListingForm({
   const [errors, setErrors] = useState<Errors>({});
   const [error, setError] = useState<string | null>(null);
   const [pending, startTransition] = useTransition();
-  const [saveAs, setSaveAs] = useState<"pending" | "draft">("pending");
+  const [saveAs, setSaveAs] = useState<SaveAs>(admin ? "approved" : "pending");
+  const [agentId, setAgentId] = useState(agents?.[0]?.id ?? "");
+
+  const adminCreate = admin && mode === "create";
 
   const set = <K extends keyof ListingFormValues>(key: K, value: ListingFormValues[K]) =>
     setValues((prev) => ({ ...prev, [key]: value }));
@@ -295,7 +236,7 @@ export function ListingForm({
     });
   };
 
-  const submit = (status: "pending" | "draft") => {
+  const submit = (status: SaveAs) => {
     setError(null);
     setErrors({});
     setSaveAs(status);
@@ -342,15 +283,30 @@ export function ListingForm({
       const result =
         mode === "edit" && propertyId
           ? await updateListingAction(propertyId, payload)
-          : await createListingAction(payload);
+          : adminCreate
+            ? await adminCreateListingAction({ ...payload, agentId })
+            : await createListingAction(payload);
       if (!result.ok) {
         setError(result.error);
         setErrors(result.fields ?? {});
         toast(result.error, "error");
         return;
       }
-      toast(status === "draft" ? "Draft saved" : "Listing submitted for review", "success");
-      router.push("/dashboard/listings");
+      toast(
+        status === "draft"
+          ? "Draft saved"
+          : status === "approved"
+            ? "Listing published"
+            : "Listing submitted for review",
+        "success"
+      );
+      router.push(
+        adminCreate
+          ? status === "draft"
+            ? "/dashboard/import/new"
+            : `/dashboard/moderation?status=${status}`
+          : "/dashboard/listings"
+      );
       router.refresh();
     });
   };
@@ -364,6 +320,36 @@ export function ListingForm({
       className="grid gap-6 lg:grid-cols-[1fr_17rem] lg:items-start"
     >
       <div className="space-y-6 pb-24 lg:pb-0">
+        {adminCreate && (
+          <Section
+            id="owner"
+            title="Ownership"
+            description="Every listing belongs to an agent. The agent's agency is applied automatically."
+          >
+            <div>
+              <Label htmlFor="agentId">Assign to agent</Label>
+              <Select
+                id="agentId"
+                value={agentId}
+                onChange={(e) => setAgentId(e.target.value)}
+                disabled={!agents?.length}
+              >
+                {!agents?.length && <option value="">No active agents available</option>}
+                {agents?.map((agent) => (
+                  <option key={agent.id} value={agent.id}>
+                    {agent.name} · {agent.email}
+                  </option>
+                ))}
+              </Select>
+              <FieldError error={errors.agentId} />
+              {!agents?.length && (
+                <p className="mt-2 text-xs text-stone-500">
+                  Create an agent account and verify it before adding listings.
+                </p>
+              )}
+            </div>
+          </Section>
+        )}
         <Section id="basics" title="The basics" description="What are you listing, and on what terms?">
           <div>
             <Label htmlFor="title">Listing title</Label>
@@ -735,10 +721,12 @@ export function ListingForm({
       <aside className="sticky top-24 hidden lg:block">
         <div className="rounded-xl border border-ivory-200 bg-white p-6">
           <h2 className="font-serif text-lg text-charcoal-900">
-            {mode === "edit" ? "Update listing" : "Publish listing"}
+            {mode === "edit" ? "Update listing" : adminCreate ? "Add listing" : "Publish listing"}
           </h2>
           <p className="mt-1.5 text-xs leading-relaxed text-stone-400">
-            Submissions are reviewed by our editorial team, usually within one business day.
+            {adminCreate
+              ? "Publish immediately on behalf of the assigned agent, send it to moderation, or keep it as a draft."
+              : "Submissions are reviewed by our editorial team, usually within one business day."}
           </p>
           {error && (
             <p role="alert" className="mt-4 rounded-md bg-rust-600/10 px-3 py-2 text-xs text-rust-600">
@@ -746,7 +734,19 @@ export function ListingForm({
             </p>
           )}
           <div className="mt-5 space-y-2">
-            <Button type="button" className="w-full" onClick={() => submit("pending")} loading={pending && saveAs === "pending"}>
+            {adminCreate && (
+              <Button
+                type="button"
+                variant="accent"
+                className="w-full"
+                onClick={() => submit("approved")}
+                loading={pending && saveAs === "approved"}
+                disabled={!agentId}
+              >
+                Publish now
+              </Button>
+            )}
+            <Button type="button" className="w-full" onClick={() => submit("pending")} loading={pending && saveAs === "pending"} disabled={adminCreate && !agentId}>
               {mode === "edit" ? "Save & resubmit" : "Submit for review"}
             </Button>
             <Button
@@ -755,6 +755,7 @@ export function ListingForm({
               className="w-full"
               onClick={() => submit("draft")}
               loading={pending && saveAs === "draft"}
+              disabled={adminCreate && !agentId}
             >
               Save as draft
             </Button>
@@ -767,11 +768,16 @@ export function ListingForm({
         </div>
       </aside>
 
-      <div className="fixed inset-x-0 bottom-0 z-30 flex items-center gap-3 border-t border-ivory-200 bg-ivory-50/95 px-5 py-3 backdrop-blur lg:hidden">
-        <Button type="button" className="flex-1" onClick={() => submit("pending")} loading={pending && saveAs === "pending"}>
+      <div className="fixed inset-x-0 bottom-0 z-30 flex items-center gap-2 border-t border-ivory-200 bg-ivory-50/95 px-5 py-3 backdrop-blur lg:hidden">
+        {adminCreate && (
+          <Button type="button" variant="accent" className="flex-1" onClick={() => submit("approved")} loading={pending && saveAs === "approved"} disabled={!agentId}>
+            Publish
+          </Button>
+        )}
+        <Button type="button" className="flex-1" onClick={() => submit("pending")} loading={pending && saveAs === "pending"} disabled={adminCreate && !agentId}>
           {mode === "edit" ? "Save listing" : "Submit"}
         </Button>
-        <Button type="button" variant="outline" className="flex-1" onClick={() => submit("draft")} loading={pending && saveAs === "draft"}>
+        <Button type="button" variant="outline" className="flex-1" onClick={() => submit("draft")} loading={pending && saveAs === "draft"} disabled={adminCreate && !agentId}>
           Draft
         </Button>
       </div>

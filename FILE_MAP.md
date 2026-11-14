@@ -72,6 +72,7 @@ Orientation guide for the Arcadia codebase. Paths are relative to the repository
 | `reports/page.tsx` | Member report review |
 | `users/page.tsx` | Member directory and account actions |
 | `import/page.tsx` | Admin data import: JSON upload + synthetic listing generator |
+| `import/new/page.tsx` | Admin form-based listing creation with agent assignment |
 
 ### API — `app/api/`
 
@@ -195,6 +196,7 @@ Server Actions, all returning `ActionResult`.
 | `services/analytics.service.ts` | Admin/agent/customer overview metrics |
 | `listings-import.ts` | Shared import schema, payload parsing and upsert runner (CLI + admin) |
 | `synthetic-listings.ts` | Deterministic sample listing generator used by the admin studio |
+| `listing-form.ts` | Shared listing form values/defaults (server + client safe) |
 | `validation/index.ts` | `parseInput`, `toFieldErrors`, FormData helpers |
 | `validation/auth.ts` | Auth and profile schemas |
 | `validation/property.ts` | Listing, moderation and search-filter schemas |

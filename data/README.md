@@ -14,6 +14,10 @@ JSON there, or use **Generate sample** to produce synthetic listings for
 testing. The dashboard accepts up to 500 entries and validates exactly like
 the CLI.
 
+For one-off real listings, **Dashboard → Data import → Add listing with form**
+provides the full property form (photos, amenities, location, specs) with an
+agent selector, so no JSON is required.
+
 Listings are matched by `slug`, so re-running updates the same record instead
 of creating duplicates. New listings enter the moderation queue as `pending`
 unless you set `"status": "approved"`.

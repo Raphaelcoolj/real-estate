@@ -1,5 +1,6 @@
 import { DashboardHeader } from "@/components/dashboard/page-header";
-import { ListingForm, emptyListingFormValues } from "@/components/dashboard/listing-form";
+import { ListingForm } from "@/components/dashboard/listing-form";
+import { emptyListingFormValues } from "@/lib/listing-form";
 import { Breadcrumbs } from "@/components/layout/breadcrumbs";
 import { requireRole } from "@/lib/rbac";
 

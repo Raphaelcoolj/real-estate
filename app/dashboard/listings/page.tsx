@@ -39,7 +39,14 @@ export default async function ListingsPage({
         eyebrow="Portfolio"
         title="Your listings"
         description={`${result.total} propert${result.total === 1 ? "y" : "ies"} in your portfolio.`}
-        action={<ButtonLink href="/dashboard/listings/new" size="sm">New listing</ButtonLink>}
+        action={
+          <ButtonLink
+            href={user.role === "admin" ? "/dashboard/import/new" : "/dashboard/listings/new"}
+            size="sm"
+          >
+            New listing
+          </ButtonLink>
+        }
       />
 
       <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
@@ -86,7 +93,11 @@ export default async function ListingsPage({
               ? "Try a different keyword or clear the filters."
               : "Publish your first property to start receiving enquiries and viewing requests."
           }
-          action={<ButtonLink href="/dashboard/listings/new">Create a listing</ButtonLink>}
+          action={
+            <ButtonLink href={user.role === "admin" ? "/dashboard/import/new" : "/dashboard/listings/new"}>
+              Create a listing
+            </ButtonLink>
+          }
         />
       )}
 

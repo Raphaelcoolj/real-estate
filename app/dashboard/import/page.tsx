@@ -1,4 +1,5 @@
 import { DashboardHeader } from "@/components/dashboard/page-header";
+import { ButtonLink } from "@/components/ui/button";
 import { ImportStudio } from "@/components/dashboard/import-studio";
 import { connectDB } from "@/lib/db";
 import { requireAdmin } from "@/lib/rbac";
@@ -36,7 +37,12 @@ export default async function ImportPage() {
       <DashboardHeader
         eyebrow="Platform"
         title="Data import"
-        description="Paste or upload a JSON array of listings to populate the marketplace with synthetic demo data or genuine inventory. Entries are validated and upserted by slug."
+        description="Enter real inventory with the listing form, or paste/upload JSON to bulk-load synthetic demo data or genuine listings. JSON entries are validated and upserted by slug."
+        action={
+          <ButtonLink href="/dashboard/import/new" size="sm">
+            Add listing with form
+          </ButtonLink>
+        }
       />
 
       <ImportStudio agents={data.agents} total={data.total} pending={data.pending} />

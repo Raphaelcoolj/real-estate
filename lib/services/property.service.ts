@@ -7,6 +7,7 @@ import "server-only";
 import { Types, type QueryFilter } from "mongoose";
 import { connectDB } from "@/lib/db";
 import { Property, type PropertyDocument } from "@/models/Property";
+import { User } from "@/models/User";
 import { POPULAR_DISTRICTS } from "@/constants/locations";
 import {
   MAP_PAGE_SIZE,
@@ -17,7 +18,7 @@ import {
 import { geocodeAddress } from "@/lib/mapbox";
 import { AppError, ForbiddenError, NotFoundError } from "@/lib/errors";
 import { slugify } from "@/lib/utils";
-import type { ParsedFilters, PropertyInput } from "@/lib/validation/property";
+import type { AdminListingInput, ParsedFilters, PropertyInput } from "@/lib/validation/property";
 import type {
   Paginated,
   PropertyDetail,
@@ -403,7 +404,7 @@ export async function incrementPropertyViews(propertyId: string): Promise<void> 
 /* -------------------------------------------------------------------------- */
 
 async function resolveLocation(
-  input: PropertyInput
+  input: Pick<PropertyInput, "lat" | "lng" | "addressLine" | "city" | "country">
 ): Promise<{ coordinates: [number, number] | null; missing: boolean }> {
   if (input.lat != null && input.lng != null) {
     return { coordinates: [input.lng, input.lat], missing: false };
@@ -414,19 +415,19 @@ async function resolveLocation(
   return { coordinates: null, missing: true };
 }
 
-export async function createProperty(
-  input: PropertyInput,
-  actor: SessionUser
-): Promise<PropertySummary> {
-  if (actor.role !== "agent" && actor.role !== "admin") {
-    throw new ForbiddenError("Only agents can publish listings.");
-  }
-  await connectDB();
+type ListingCreateStatus = "draft" | "pending" | "approved";
 
+type ListingCreateInput = Omit<PropertyInput, "status"> & { status: ListingCreateStatus };
+
+async function insertProperty(
+  input: ListingCreateInput,
+  owner: { id: string; agencyId?: string | null },
+  approvedBy?: string
+): Promise<PropertySummary> {
   const slug = await uniqueSlug(input.title);
   const { coordinates, missing } = await resolveLocation(input);
 
-  const status: PropertyStatus = input.status === "draft" ? "draft" : "pending";
+  const status = input.status;
   const now = new Date();
 
   const doc = await Property.create({
@@ -474,14 +475,57 @@ export async function createProperty(
     })),
     videoUrl: input.videoUrl ?? null,
     floorPlans: input.floorPlans,
-    agent: new Types.ObjectId(actor.id),
-    agency: actor.agencyId ? new Types.ObjectId(actor.agencyId) : null,
-    submittedAt: status === "pending" ? now : null,
+    agent: new Types.ObjectId(owner.id),
+    agency: owner.agencyId ? new Types.ObjectId(owner.agencyId) : null,
+    submittedAt: status === "draft" ? null : now,
+    approvedAt: status === "approved" ? now : null,
+    publishedAt: status === "approved" ? now : null,
+    reviewedBy: status === "approved" && approvedBy ? new Types.ObjectId(approvedBy) : null,
     stats: { views: 0, favourites: 0, enquiries: 0 },
   });
 
   const created = (await Property.findById(doc._id).lean()) as unknown as AnyDoc;
   return serializePropertySummary(created);
+}
+
+export async function createProperty(
+  input: PropertyInput,
+  actor: SessionUser
+): Promise<PropertySummary> {
+  if (actor.role !== "agent" && actor.role !== "admin") {
+    throw new ForbiddenError("Only agents can publish listings.");
+  }
+  await connectDB();
+  return insertProperty(
+    { ...input, status: input.status === "draft" ? "draft" : "pending" },
+    actor
+  );
+}
+
+/**
+ * Admin-only: create a listing on behalf of an active agent. The admin can
+ * publish immediately, send the listing to moderation, or keep it as a draft.
+ */
+export async function adminCreateProperty(
+  agentId: string,
+  input: Omit<AdminListingInput, "agentId">,
+  admin: SessionUser
+): Promise<PropertySummary> {
+  await connectDB();
+
+  const agent = await User.findOne({ _id: agentId, role: "agent", status: "active" })
+    .select("_id agency")
+    .lean();
+  if (!agent) throw new NotFoundError("Choose an active agent to own this listing.");
+
+  return insertProperty(
+    input,
+    {
+      id: String(agent._id),
+      agencyId: agent.agency ? String(agent.agency) : null,
+    },
+    admin.id
+  );
 }
 
 export async function updateProperty(

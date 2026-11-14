@@ -8,9 +8,10 @@
 import { revalidatePath } from "next/cache";
 import { actionRole, limitAction, runAction } from "@/actions/helpers";
 import { parseInput } from "@/lib/validation";
-import { moderationSchema, propertyInputSchema } from "@/lib/validation/property";
+import { adminListingInputSchema, moderationSchema, propertyInputSchema } from "@/lib/validation/property";
 import { listingStatusSchema } from "@/lib/validation/interaction";
 import {
+  adminCreateProperty,
   createProperty,
   deleteProperty,
   moderateProperty,
@@ -34,6 +35,26 @@ export async function createListingAction(input: unknown): Promise<ActionResult<
 
     const property = await createProperty(parsed.data, actor);
     revalidatePath("/dashboard/listings");
+    revalidatePath("/properties");
+    return property;
+  });
+}
+
+export async function adminCreateListingAction(
+  input: unknown
+): Promise<ActionResult<PropertySummary>> {
+  return runAction(async () => {
+    await limitAction("listing-create");
+    const admin = await actionRole(["admin"]);
+
+    const parsed = parseInput(adminListingInputSchema, input);
+    if (!parsed.success) throw fieldError(parsed);
+
+    const { agentId, ...listing } = parsed.data;
+    const property = await adminCreateProperty(agentId, listing, admin);
+    revalidatePath("/dashboard/listings");
+    revalidatePath("/dashboard/moderation");
+    revalidatePath("/dashboard/import");
     revalidatePath("/properties");
     return property;
   });
