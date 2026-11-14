@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 1200" width="900" height="1200" role="img">
+<defs>
+<linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+<stop offset="0%" stop-color="#efe6d4"/><stop offset="100%" stop-color="#cbb894"/>
+</linearGradient>
+<linearGradient id="glass" x1="0" y1="0" x2="1" y2="1">
+<stop offset="0%" stop-color="#f8f2e5" stop-opacity="0.9"/><stop offset="100%" stop-color="#b18f4f" stop-opacity="0.45"/>
+</linearGradient>
+<radialGradient id="glow" cx="50%" cy="50%" r="50%">
+<stop offset="0%" stop-color="#d8b878" stop-opacity="0.85"/><stop offset="100%" stop-color="#d8b878" stop-opacity="0"/>
+</radialGradient>
+<filter id="grain"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" stitchTiles="stitch"/><feColorMatrix type="saturate" values="0"/><feComponentTransfer><feFuncA type="linear" slope="0.05"/></feComponentTransfer><feComposite operator="in" in2="SourceGraphic"/></filter>
+<rect width="900" height="1200" filter="url(#grain)" opacity="0.5" fill="#000"/>
+</defs>
+<rect width="900" height="1200" fill="url(#sky)"/>
+<circle cx="252.00000000000003" cy="288" r="117" fill="url(#glow)"/>
+<path d="M 72 1056 V 680.9229963161051 A 63.00000000000001 63.00000000000001 0 0 1 198 680.9229963161051 V 1056 Z" fill="#30291f" opacity="0.75"/>
+<path d="M 79 1056 V 684.9229963161051 A 56.00000000000001 56.00000000000001 0 0 1 191 684.9229963161051 V 1056 Z" fill="url(#glass)" opacity="0.5"/><path d="M 225 1056 V 573.4678384624422 A 63.00000000000001 63.00000000000001 0 0 1 351 573.4678384624422 V 1056 Z" fill="#30291f" opacity="0.78"/>
+<path d="M 232 1056 V 577.4678384624422 A 56.00000000000001 56.00000000000001 0 0 1 344 577.4678384624422 V 1056 Z" fill="url(#glass)" opacity="0.5"/><path d="M 378 1056 V 757.7548409420997 A 63.00000000000001 63.00000000000001 0 0 1 504 757.7548409420997 V 1056 Z" fill="#30291f" opacity="0.81"/>
+<path d="M 385 1056 V 761.7548409420997 A 56.00000000000001 56.00000000000001 0 0 1 497 761.7548409420997 V 1056 Z" fill="url(#glass)" opacity="0.5"/><path d="M 531 1056 V 602.8462293036282 A 63.00000000000001 63.00000000000001 0 0 1 657 602.8462293036282 V 1056 Z" fill="#30291f" opacity="0.84"/>
+<path d="M 538 1056 V 606.8462293036282 A 56.00000000000001 56.00000000000001 0 0 1 650 606.8462293036282 V 1056 Z" fill="url(#glass)" opacity="0.5"/><path d="M 684 1056 V 574.8078945111483 A 63.00000000000001 63.00000000000001 0 0 1 810 574.8078945111483 V 1056 Z" fill="#30291f" opacity="0.87"/>
+<path d="M 691 1056 V 578.8078945111483 A 56.00000000000001 56.00000000000001 0 0 1 803 578.8078945111483 V 1056 Z" fill="url(#glass)" opacity="0.5"/>
+<rect x="0" y="1056" width="900" height="144" fill="#30291f"/>
+<path d="M 54 1054 H 846" stroke="#b18f4f" stroke-width="2" opacity="0.8"/>
+</svg>

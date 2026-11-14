@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1100" width="1600" height="1100" role="img">
+<defs>
+<linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+<stop offset="0%" stop-color="#e8e5df"/><stop offset="100%" stop-color="#b9c4c1"/>
+</linearGradient>
+<linearGradient id="glass" x1="0" y1="0" x2="1" y2="1">
+<stop offset="0%" stop-color="#f2f0ea" stop-opacity="0.9"/><stop offset="100%" stop-color="#9fae8e" stop-opacity="0.45"/>
+</linearGradient>
+<radialGradient id="glow" cx="50%" cy="50%" r="50%">
+<stop offset="0%" stop-color="#dfcba8" stop-opacity="0.85"/><stop offset="100%" stop-color="#dfcba8" stop-opacity="0"/>
+</radialGradient>
+<filter id="grain"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" stitchTiles="stitch"/><feColorMatrix type="saturate" values="0"/><feComponentTransfer><feFuncA type="linear" slope="0.05"/></feComponentTransfer><feComposite operator="in" in2="SourceGraphic"/></filter>
+<rect width="1600" height="1100" filter="url(#grain)" opacity="0.5" fill="#000"/>
+</defs>
+<rect width="1600" height="1100" fill="url(#sky)"/>
+<rect x="96" y="154.00000000000003" width="1408" height="836" fill="#26312f"/>
+<rect x="166.0" y="204.0" width="201.3" height="186.0" fill="url(#glass)" opacity="0.47"/><rect x="379.3" y="204.0" width="201.3" height="186.0" fill="url(#glass)" opacity="0.60"/><rect x="592.7" y="204.0" width="201.3" height="186.0" fill="url(#glass)" opacity="0.49"/><rect x="806.0" y="204.0" width="201.3" height="186.0" fill="url(#glass)" opacity="0.31"/><rect x="1019.3" y="204.0" width="201.3" height="186.0" fill="url(#glass)" opacity="0.70"/><rect x="1232.7" y="204.0" width="201.3" height="186.0" fill="url(#glass)" opacity="0.49"/><rect x="166.0" y="402.0" width="201.3" height="186.0" fill="url(#glass)" opacity="0.57"/><rect x="379.3" y="402.0" width="201.3" height="186.0" fill="url(#glass)" opacity="0.44"/><rect x="592.7" y="402.0" width="201.3" height="186.0" fill="url(#glass)" opacity="0.56"/><rect x="806.0" y="402.0" width="201.3" height="186.0" fill="url(#glass)" opacity="0.39"/><rect x="1019.3" y="402.0" width="201.3" height="186.0" fill="url(#glass)" opacity="0.46"/><rect x="1232.7" y="402.0" width="201.3" height="186.0" fill="url(#glass)" opacity="0.52"/><rect x="166.0" y="600.0" width="201.3" height="186.0" fill="url(#glass)" opacity="0.54"/><rect x="379.3" y="600.0" width="201.3" height="186.0" fill="url(#glass)" opacity="0.63"/><rect x="592.7" y="600.0" width="201.3" height="186.0" fill="url(#glass)" opacity="0.40"/><rect x="806.0" y="600.0" width="201.3" height="186.0" fill="url(#glass)" opacity="0.34"/><rect x="1019.3" y="600.0" width="201.3" height="186.0" fill="url(#glass)" opacity="0.48"/><rect x="1232.7" y="600.0" width="201.3" height="186.0" fill="url(#glass)" opacity="0.53"/><rect x="166.0" y="798.0" width="201.3" height="186.0" fill="url(#glass)" opacity="0.46"/><rect x="379.3" y="798.0" width="201.3" height="186.0" fill="url(#glass)" opacity="0.53"/><rect x="592.7" y="798.0" width="201.3" height="186.0" fill="url(#glass)" opacity="0.74"/><rect x="806.0" y="798.0" width="201.3" height="186.0" fill="url(#glass)" opacity="0.66"/><rect x="1019.3" y="798.0" width="201.3" height="186.0" fill="url(#glass)" opacity="0.70"/><rect x="1232.7" y="798.0" width="201.3" height="186.0" fill="url(#glass)" opacity="0.44"/>
+<rect x="96" y="984" width="1408" height="6" fill="#9fae8e" opacity="0.8"/>
+<rect x="0" y="990" width="1600" height="110" fill="#26312f" opacity="0.9"/>
+</svg>

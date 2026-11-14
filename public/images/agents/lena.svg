@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 320" width="320" height="320" role="img" aria-label="Lena Whitmore">
+<defs>
+<linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+<stop offset="0%" stop-color="#e5e8e4"/><stop offset="100%" stop-color="#aebbb3"/>
+</linearGradient>
+</defs>
+<rect width="320" height="320" fill="url(#bg)"/>
+<circle cx="160" cy="122" r="58" fill="#24332c" opacity="0.92"/>
+<path d="M 52 320 C 62 238 108 200 160 200 C 212 200 258 238 268 320 Z" fill="#66796f" opacity="0.95"/>
+<circle cx="160" cy="122" r="72" fill="none" stroke="#8da08d" stroke-width="2" opacity="0.7"/>
+<text x="160" y="300" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="26" letter-spacing="6" fill="#f1f4f0" opacity="0.9">LW</text>
+</svg>

@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 480" width="480" height="480" role="img" aria-label="Sterling &amp; Co.">
+<rect width="480" height="480" rx="24" fill="#24332c"/>
+<rect x="24" y="24" width="432" height="432" fill="none" stroke="#8da08d" stroke-width="2" opacity="0.6"/>
+<circle cx="240" cy="240" r="132" fill="none" stroke="#8da08d" stroke-width="1.5" opacity="0.45"/>
+<text x="240" y="268" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="120" letter-spacing="10" fill="#f1f4f0">S&</text>
+</svg>
